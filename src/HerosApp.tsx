@@ -1,9 +1,10 @@
+import { RouterProvider } from "react-router"
+import { appRouter } from "./router/app.router"
 
 export const HerosApp = () => {
   return (
     <>
-      <div>HerosApp</div>
-      <h2>Hola mundo</h2>
+      <RouterProvider router={appRouter} />
     </>
   )
 }
