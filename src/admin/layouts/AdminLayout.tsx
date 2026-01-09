@@ -1,0 +1,13 @@
+import { Outlet } from "react-router";
+
+export default function AdminLayout() {
+    return (
+        <>
+            <div className="bg-blue-50">
+                <div>AdminLayout</div>
+                <Outlet />
+
+            </div>
+        </>
+    )
+}

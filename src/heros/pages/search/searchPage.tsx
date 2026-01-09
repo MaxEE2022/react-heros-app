@@ -1,6 +1,9 @@
+import CustomJumbotron from "@/components/custom/CustomJumbotron";
 
-export const searchPage = () => {
+export default function SearchPage() {
   return (
-    <div>searchPage</div>
+    <>
+      <CustomJumbotron title="Heros Search" description="Find you favorite super Hero" />
+    </>
   )
 }
