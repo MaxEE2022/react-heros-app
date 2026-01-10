@@ -2,28 +2,51 @@ import CustomBreadCrumbs from "@/components/custom/CustomBreadCrumbs"
 import CustomJumbotron from "@/components/custom/CustomJumbotron"
 import CustomPagination from "@/components/custom/CustomPagination"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { getHerosByPage } from "@/heros/actions/get-heros-by-page.action"
 import HeroGrid from "@/heros/components/HeroGrid"
 import HeroStats from "@/heros/components/HeroStats"
 import { TabsContent } from "@radix-ui/react-tabs"
+import { useQuery } from "@tanstack/react-query"
 import {
   Heart
 } from "lucide-react"
+import { useSearchParams } from "react-router"
 
 export default function HomePage() {
+
+  const [searchparams] = useSearchParams();
+  const page = parseInt(searchparams.get('page') || '1');
+  const { data, isLoading, error } = useQuery(
+    {
+      queryKey: ['GetHeros', page],
+      queryFn: () => getHerosByPage(page),
+    },
+    
+
+  );
+
+  if (isLoading)
+    return <h2>Loading ...</h2>
+
+  if (error)
+    return <h2>{`somethini went wrong Erro: ${error}}`}</h2>
+
+  const totalPages = data?.totalPages;
+  const heros = data?.heroes;
   return (
     <>
       <>
         {/* Header */}
         <CustomJumbotron title="Super Heros App" description="Find, Explore, and Discover your Favorite Super Heros" />
 
-        <CustomBreadCrumbs/>
+        <CustomBreadCrumbs />
 
         {/* Stats Dashboard */}
         <HeroStats />
 
 
         {/* Tabs */}
-        <Tabs value="villains" className="mb-8">
+        <Tabs value="all" className="mb-8">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="all">All Characters (16)</TabsTrigger>
             <TabsTrigger value="favorites" className="flex items-center gap-2">
@@ -61,12 +84,12 @@ export default function HomePage() {
 
 
         {/* Hero Grid */}
-        <HeroGrid />
+        <HeroGrid heros={heros}/>
 
 
 
         {/* Pagination */}
-        <CustomPagination  totalPages={8}/>
+        <CustomPagination totalPages={totalPages || 1} />
       </>
     </>
   )
