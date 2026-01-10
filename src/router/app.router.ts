@@ -22,7 +22,7 @@ export const appRouter = createBrowserRouter([
                 Component: HomePage
             },
             {
-                path: 'hero/:id',
+                path: 'hero/:slugId',
                 Component: HeroPage
             },
             {
@@ -45,4 +45,5 @@ export const appRouter = createBrowserRouter([
 
         ]
     },
+    
 ]);

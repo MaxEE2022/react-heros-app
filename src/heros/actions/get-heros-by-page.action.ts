@@ -3,7 +3,13 @@ import type { Hero } from "../interfaces/hero.interface";
 import type { HeroResponse } from "../interfaces/heros.response";
 
 const BASE_IMAGE_URL = import.meta.env.VITE_IMG_API_URL;
-export async function getHerosByPage(page: number = 1, limit: number = 6){
+export async function getHerosByPage(page: number = 1, limit: number = 6):Promise<HeroResponse>{
+    if(isNaN(page)){
+        page = 1;
+    }
+    if(isNaN(limit)){
+        limit = 6;
+    }
     const { data } = await HerosAPI.get<HeroResponse>('/', {
         params: {
             limit: limit,
@@ -32,7 +38,7 @@ export async function getHerosByPage(page: number = 1, limit: number = 6){
     }));
 
     return {
-        totalPages: data.pages,
-        heroes
+        ...data,
+        heroes: heroes,
     };
 }

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Brain, Eye, Gauge, Heart, Shield, Zap } from "lucide-react";
+import { useNavigate } from "react-router";
 import type { Hero } from "../interfaces/hero.interface";
 
 interface Props {
@@ -12,8 +13,11 @@ interface Props {
 const powersToShow = 3;
 
 export default function HeroGridCard({ Hero }: Props) {
+
+    const navigate = useNavigate();
     const {
         name,
+        slug,
         alias,
         powers,
         description,
@@ -29,14 +33,18 @@ export default function HeroGridCard({ Hero }: Props) {
         universe,
     } = Hero;
 
+    function handleClick() {
+        navigate(`/hero/${slug}`); 1
+    }
 
     return (
         <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-linear-to-br from-white to-gray-50">
-            <div className="relative h-64 overflow-hidden">
+            <div className="relative h-64 ">
                 <img
                     src={image}
                     alt={name}
-                    className="object-cover transition-all duration-500 group-hover:scale-110"
+                    onClick={handleClick}
+                    className="object-cover transition-all duration-500 group-hover:scale-110 absolute top-[-30px] w-full h-[410px]"
                 />
 
                 {/* Status indicator */}
@@ -65,7 +73,7 @@ export default function HeroGridCard({ Hero }: Props) {
                 </Button>
             </div>
 
-            <CardHeader className="pb-3">
+            <CardHeader className="py-3 z-10 bg-gray-100/50 backdrop-blur-sm relative top-1 group-hover:top-[-10px] transition-all duration-300">
                 <div className="flex justify-between items-start">
                     <div className="space-y-1">
                         <h3 className="font-bold text-lg leading-tight">{alias}</h3>
@@ -122,7 +130,7 @@ export default function HeroGridCard({ Hero }: Props) {
                         {
                             powers.slice(0, powersToShow).map((power) =>
                             (
-                                <Badge variant="outline" className="text-xs">
+                                <Badge key={power} variant="outline" className="text-xs">
                                     {power}
                                 </Badge>
 
@@ -137,7 +145,7 @@ export default function HeroGridCard({ Hero }: Props) {
 
                             )
                         }
-                        
+
                     </div>
                 </div>
 

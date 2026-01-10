@@ -1,27 +1,26 @@
 import CustomBreadCrumbs from "@/components/custom/CustomBreadCrumbs"
 import CustomJumbotron from "@/components/custom/CustomJumbotron"
 import CustomPagination from "@/components/custom/CustomPagination"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { getHerosByPage } from "@/heros/actions/get-heros-by-page.action"
 import HeroGrid from "@/heros/components/HeroGrid"
 import HeroStats from "@/heros/components/HeroStats"
-import { TabsContent } from "@radix-ui/react-tabs"
+import HeroTabs from "@/heros/components/heroTabs"
 import { useQuery } from "@tanstack/react-query"
-import {
-  Heart
-} from "lucide-react"
 import { useSearchParams } from "react-router"
 
 export default function HomePage() {
+  1
 
   const [searchparams] = useSearchParams();
   const page = parseInt(searchparams.get('page') || '1');
+  const limit = parseInt(searchparams.get('limit') || '6');
   const { data, isLoading, error } = useQuery(
     {
-      queryKey: ['GetHeros', page],
-      queryFn: () => getHerosByPage(page),
+      queryKey: ['GetHeros', { page, limit }],
+      queryFn: () => getHerosByPage(page, limit),
+      staleTime: 1000 * 60 * 5,
     },
-    
+
 
   );
 
@@ -31,7 +30,7 @@ export default function HomePage() {
   if (error)
     return <h2>{`somethini went wrong Erro: ${error}}`}</h2>
 
-  const totalPages = data?.totalPages;
+  const totalPages = data?.pages;
   const heros = data?.heroes;
   return (
     <>
@@ -46,30 +45,8 @@ export default function HomePage() {
 
 
         {/* Tabs */}
-        <Tabs value="all" className="mb-8">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="all">All Characters (16)</TabsTrigger>
-            <TabsTrigger value="favorites" className="flex items-center gap-2">
-              <Heart className="h-4 w-4" />
-              Favorites (3)
-            </TabsTrigger>
-            <TabsTrigger value="heroes">Heroes (12)</TabsTrigger>
-            <TabsTrigger value="villains">Villains (2)</TabsTrigger>
-          </TabsList>
+        <HeroTabs />
 
-          <TabsContent value="all">
-            todos los personajes
-          </TabsContent>
-          <TabsContent value="favorites">
-            Favorites
-          </TabsContent>
-          <TabsContent value="heroes">
-            Heros
-          </TabsContent>
-          <TabsContent value="villains">
-            Villians
-          </TabsContent>
-        </Tabs>
 
         {/* Results info */}
         {/* <div className="flex justify-between items-center mb-6">
@@ -84,7 +61,7 @@ export default function HomePage() {
 
 
         {/* Hero Grid */}
-        <HeroGrid heros={heros}/>
+        <HeroGrid heros={heros} />
 
 
 
