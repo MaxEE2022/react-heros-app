@@ -1,11 +1,10 @@
 import CustomBreadCrumbs from "@/components/custom/CustomBreadCrumbs"
 import CustomJumbotron from "@/components/custom/CustomJumbotron"
 import CustomPagination from "@/components/custom/CustomPagination"
-import { getHerosByPage } from "@/heros/actions/get-heros-by-page.action"
 import HeroGrid from "@/heros/components/HeroGrid"
 import HeroStats from "@/heros/components/HeroStats"
-import HeroTabs from "@/heros/components/heroTabs"
-import { useQuery } from "@tanstack/react-query"
+import HeroTabs from "@/heros/components/HeroTabs"
+import usePaginatedHero from "@/heros/hooks/usePaginatedHero"
 import { useSearchParams } from "react-router"
 
 export default function HomePage() {
@@ -14,24 +13,18 @@ export default function HomePage() {
   const [searchparams] = useSearchParams();
   const page = parseInt(searchparams.get('page') || '1');
   const limit = parseInt(searchparams.get('limit') || '6');
-  const { data, isLoading, error } = useQuery(
-    {
-      queryKey: ['GetHeros', { page, limit }],
-      queryFn: () => getHerosByPage(page, limit),
-      staleTime: 1000 * 60 * 5,
-    },
+  const category = (searchparams.get('tab') || 'all');
 
+  const { data, isPending, isError, error } = usePaginatedHero(page, limit, category);
 
-  );
-
-  if (isLoading)
+  if (isPending)
     return <h2>Loading ...</h2>
 
-  if (error)
+  if (isError)
     return <h2>{`somethini went wrong Erro: ${error}}`}</h2>
 
-  const totalPages = data?.pages;
-  const heros = data?.heroes;
+  const totalPages = data.pages;
+  const heros = data.heroes;
   return (
     <>
       <>
