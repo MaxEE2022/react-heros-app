@@ -15,7 +15,7 @@ export default function HeroGrid({ heros }: Props) {
                 (heros && heros.length > 0) &&
                 heros.map((hero) => (
 
-                    <HeroGridCard key={hero.slug} Hero={hero} />
+                    <HeroGridCard key={hero.slug} hero={hero} />
                 ))
 
             }

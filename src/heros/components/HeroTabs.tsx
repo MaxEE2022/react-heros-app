@@ -3,11 +3,15 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTab } from "@/hooks/useTab";
 import { Heart } from "lucide-react";
 import useHeroSummary from "../hooks/useHeroSummary";
+import { FavoriteHeroContext } from "../context/FavoriteHeroContext";
+import { use } from "react";
 
 export default function HeroTabs() {
     const { activeTab, setActiveTab } = useTab();
 
     const { data: summary, isPending, isError, error } = useHeroSummary();
+
+    const { favoriteCount } = use(FavoriteHeroContext);
 
 
     if (isPending) {
@@ -25,7 +29,7 @@ export default function HeroTabs() {
                 <TabsTrigger onClick={() => setActiveTab('all')} value="all">All Characters ({totalHeroes})</TabsTrigger>
                 <TabsTrigger onClick={() => setActiveTab('favorites')} value="favorites" className="flex items-center gap-2">
                     <Heart className="h-4 w-4" />
-                    Favorites (3)
+                    Favorites ({favoriteCount})
                 </TabsTrigger>
                 <TabsTrigger onClick={() => setActiveTab('hero')} value="hero">Heroes ({heroCount})</TabsTrigger>
                 <TabsTrigger onClick={() => setActiveTab('villain')} value="villain">Villains ({villainCount})</TabsTrigger>

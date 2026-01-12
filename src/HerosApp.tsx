@@ -6,14 +6,17 @@ import {
   QueryClientProvider
 } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { FavoriteHeroProvider } from "./heros/context/FavoriteHeroContext"
 
 const queryClient = new QueryClient()
 export const HerosApp = () => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={appRouter} />
-        <ReactQueryDevtools initialIsOpen={false} />
+        <FavoriteHeroProvider>
+          <RouterProvider router={appRouter} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </FavoriteHeroProvider>
       </QueryClientProvider>
     </>
   )
